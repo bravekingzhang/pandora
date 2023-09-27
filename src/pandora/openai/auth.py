@@ -109,7 +109,7 @@ class Auth0:
         }
         resp = self.session.post(url, headers=headers, data=data, allow_redirects=False, **self.req_kwargs)
 
-        if resp.status_code == 302:
+        if resp.status_code == 302 or resp.status_code == 303:
             return self.__part_five(code_verifier, state)
         else:
             raise Exception('Error check email.')
@@ -129,7 +129,7 @@ class Auth0:
         }
 
         resp = self.session.post(url, headers=headers, data=data, allow_redirects=False, **self.req_kwargs)
-        if resp.status_code == 302:
+        if resp.status_code == 302 or resp.status_code == 303:
             location = resp.headers['Location']
             if not location.startswith('/authorize/resume?'):
                 raise Exception('Login failed.')
@@ -149,7 +149,7 @@ class Auth0:
         }
 
         resp = self.session.get(url, headers=headers, allow_redirects=False, **self.req_kwargs)
-        if resp.status_code == 302:
+        if resp.status_code == 302 or resp.status_code == 303:
             location = resp.headers['Location']
             if location.startswith('/u/mfa-otp-challenge?'):
                 if not self.mfa:
@@ -177,7 +177,7 @@ class Auth0:
         }
 
         resp = self.session.post(url, headers=headers, data=data, allow_redirects=False, **self.req_kwargs)
-        if resp.status_code == 302:
+        if resp.status_code == 302 or resp.status_code == 303:
             location = resp.headers['Location']
             if not location.startswith('/authorize/resume?'):
                 raise Exception('MFA failed.')
